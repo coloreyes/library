@@ -1,5 +1,6 @@
 /**
  * 图书实体类
+ *@author JenaKJZ
  */
 
 package model;

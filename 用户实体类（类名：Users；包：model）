@@ -2,6 +2,7 @@ package model;
 
 /**
  * 用户实体类
+ *@author JenaKJZ
  */
 
 public class Users 

@@ -1,0 +1,63 @@
+package model;
+
+/**
+ * 读者实体类
+ * @author JenaKJZ
+ *
+ */
+
+public class Readers extends Users
+{
+	private int borrow_book_num;
+	private float balance;
+	private String address;
+	private String company;
+	
+	public Readers() 
+	{
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Readers(int borrow_book_num, float balance, String address, String company) 
+	{
+		super();
+		this.borrow_book_num = borrow_book_num;
+		this.balance = balance;
+		this.address = address;
+		this.company = company;
+	}
+
+	public int getBorrow_book_num() {
+		return borrow_book_num;
+	}
+
+	public void setBorrow_book_num(int borrow_book_num) {
+		this.borrow_book_num = borrow_book_num;
+	}
+
+	public float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+}

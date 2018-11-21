@@ -1,0 +1,108 @@
+//一次仅能测试一个功能，其他功能的测试程序被注释掉
+package dao;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Books;
+
+public class Test {
+	public static void main(String[] args) throws Exception
+	{
+		BookDAO bookdao = new BookDAO();
+		
+		/**
+		 * 添加图书测试
+		 */
+		/**
+		Books book = new Books("kjz05","kjz_test_05","kjz","kjz",55,5,5,"2018.11.21");
+	    int result1 = bookdao.addBook(book);
+		
+		if(result1 ==1) {
+			System.out.println("添加图书成功");
+		}else {
+			System.out.println("添加图书失败");
+		}
+		*/
+		/**
+		 * 注销图书测试
+		 */
+		/**
+		int result2 = bookdao.deleteBook("kjz02");
+		if(result2 ==1) 
+		{
+			System.out.println("注销图书成功");
+		}
+		else 
+		{
+			System.out.println("注销图书失败");
+		}
+		*/
+		/**
+		 * 更新图书总量测试
+		 */
+		/**
+		int result3 = bookdao.updateBookSum("kjz04",80);
+		if(result3==1) 
+		{
+			System.out.println("修改图书总量成功");
+		}
+		else 
+		{
+			System.out.println("修改图书总量失败");
+		}
+		**/
+		/**
+		 * 更新图书采购日期测试
+		 */
+		/**
+		int result4 = bookdao.updateBookUpdate_Date("kjz04","2020.12.25");
+		if(result4==1) 
+		{
+			System.out.println("修改图书采购日期成功");
+		}
+		else 
+		{
+			System.out.println("修改图书采购日期失败");
+		}
+		*/
+		/**
+		 * 图书信息查询测试
+		 */
+		
+		ResultSet result5 = bookdao.listBook("Let It Go","Yourole");
+		
+		List<Books> list = new ArrayList<Books>();
+        while(result5.next())
+        {
+        	String book_id = result5.getString(1);
+        	String book_name = result5.getString(2);
+        	String book_type = result5.getString(3);
+        	String author = result5.getString(4);
+        	float price = result5.getFloat(5);
+        	int sum = result5.getInt(6);
+        	int result = result5.getInt(7);
+        	String update_date = result5.getString(8);
+        	
+        	Books book = new Books(book_id,book_name,book_type,author,price,sum,result,update_date);
+        	list.add(book);
+        	
+        }
+
+		for(Books book:list)
+		{
+			System.out.println(book.getBook_id());
+			System.out.println(book.getBook_name());
+        	System.out.println(book.getBook_type());
+        	System.out.println(book.getAuthor());
+        	System.out.println(book.getPrice());
+        	System.out.println(book.getSum());
+        	System.out.println(book.getResult());
+        	System.out.println(book.getUpdate_date());
+		}
+		
+		
+	}
+	
+}

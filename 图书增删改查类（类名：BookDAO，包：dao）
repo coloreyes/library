@@ -1,0 +1,127 @@
+package dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import library.DBUtil;
+import library.StringUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import model.Books;
+import model.Borrow_Records;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+//import java.util.List;
+
+public class BookDAO 
+{
+	DBUtil dbutil = new DBUtil();
+	
+	/**
+	 * 图书添加 by管理员
+	 */
+	public int addBook(Books book) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		String sql = "insert into books values(?,?,?,?,?,?,?,?)";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, book.getBook_id());
+		pstmt.setString(2, book.getBook_name());
+		pstmt.setString(3, book.getBook_type());
+		pstmt.setString(4, book.getAuthor());
+		pstmt.setFloat(5, book.getPrice());
+		pstmt.setInt(6, book.getSum());
+		pstmt.setInt(7, book.getResult());
+		pstmt.setString(8, book.getUpdate_date());
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 图书删除 by管理员
+	 */
+	public int deleteBook(String book_id) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		String sql = "delete from books where book_id = ?";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, book_id);
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 更新库图书总量 by管理员
+	 */
+	public int updateBookSum(String book_id,int sum) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		String sql = "update books set sum=? where book_id=?";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setInt(1, sum);
+		pstmt.setString(2, book_id);
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 更新库图书采购日期 by管理员
+	 */
+	public int updateBookUpdate_Date(String book_id,String update_date) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		String sql = "update books set update_date=? where book_id=?";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, update_date);
+		pstmt.setString(2, book_id);
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 图书信息查询  by管理员
+	 */
+	public ResultSet listBook(String BookName,String Author) throws Exception
+	{
+		Connection con = dbutil.getCon();
+        StringBuffer sb=new StringBuffer("select * from books");
+        
+        if(StringUtil.isNotEmpty(BookName))
+        {
+        	sb.append(" where book_name like '%" + BookName + "%'" );
+        }
+        if(StringUtil.isNotEmpty(BookName))
+        {
+        	sb.append(" and author like '%" + Author + "%'" );
+        }
+        
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement(sb.toString());
+		ResultSet rs = pstmt.executeQuery();
+
+        //为了测试程序的执行所以注释掉.close这一句
+        //dbutil.close(pstmt, con);
+        return rs;
+
+	}
+
+}

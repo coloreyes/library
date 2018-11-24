@@ -1,0 +1,102 @@
+package View;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class LogOnFrm extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					LogOnFrm frame = new LogOnFrm();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public LogOnFrm() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		setTitle("图书馆系统");
+		contentPane = new JPanel();
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		//panel.setBorder(new LineBorder(Color.RED));
+		panel.setBounds(66, 87, 247, 45);
+		contentPane.add(panel);
+		
+		JLabel lblid = new JLabel("登陆ID:");
+		lblid.setFont(new Font("宋体",Font.BOLD,13));
+		lblid.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/person.png")));
+		panel.add(lblid);
+		
+		textField = new JTextField();
+		panel.add(textField);
+		textField.setColumns(10);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(66, 132, 247, 39);
+		contentPane.add(panel_1);
+		
+		JLabel label = new JLabel("密  码：");
+		label.setFont(new Font("宋体",Font.BOLD,13));
+		label.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/key.png")));
+		panel_1.add(label);
+		
+		textField_1 = new JTextField();
+		panel_1.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JLabel label_1 = new JLabel("西安电子科技大学图书馆");
+		label_1.setFont(new Font("隶书",Font.BOLD,18));
+		label_1.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/shelf.png")));
+
+		label_1.setBounds(66, 13, 289, 61);
+		contentPane.add(label_1);
+		
+		JButton btnNewButton = new JButton("登陆");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				ReaderFrm readerFrame=new ReaderFrm();
+				readerFrame.setVisible(true);
+				
+				
+			}
+		});
+		btnNewButton.setBounds(66, 195, 113, 27);
+		contentPane.add(btnNewButton);
+		
+		JButton button = new JButton("注册");
+		button.setBounds(203, 195, 113, 27);
+		contentPane.add(button);
+	}
+}

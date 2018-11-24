@@ -57,5 +57,47 @@ public class Users
 		this.user_identity = user_identity;
 	}
 
+	public User Validate() {//验证登陆
+		try {
+			DatabaseUtil Connect = new DatabaseUtil();
+			Connection connect = null;
+			connect = Connect.Connectsql(connect);
+			Statement stmt =connect.createStatement();
+			ResultSet rs = stmt.executeQuery("select user_id,user_password from users");
+			
+			int i=0;
+			while(rs.next()) {
+				if(rs.getString("user_id").equals(this.user_id)&&rs.getString("user_password").equals(this.user_password)) {
+					i = 1;
+					break;
+				}
+			}
+			if(i==0) {
+				this.exist_or_not="NO";
+			}
+			if(i==1) {
+				this.exist_or_not="YES";
+				String sql = "select user_identity,user_name from users where user_id=? and user_password=?";
+				PreparedStatement pstmt = connect.prepareStatement(sql);
+				pstmt.setString(1, this.user_id);
+				pstmt.setString(2, this.user_password);
+				ResultSet rs1 = pstmt.executeQuery();
+				rs1.next();
+				this.user_identity=rs1.getString("user_identity");
+				this.user_name = rs1.getString("user_name");
+			}
+			Connect.closeConnect(connect);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return this;
+	}
 	
+	public void PrintUser() {
+		System.out.println(user_id);
+		System.out.println(user_password);
+		System.out.println(user_name);
+		System.out.println(user_identity);
+		System.out.println(exist_or_not);
+	}
 }

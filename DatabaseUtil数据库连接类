@@ -1,0 +1,56 @@
+package Util;
+
+import java.sql.*;
+
+import user.Reader;
+/**
+ * @author 马彧豪 16130120164 603337046@qq.com
+ *
+ * 2018年11月21日
+ */
+public class DatabaseUtil {
+	private String Databaseaddress="jdbc:mysql://119.23.52.241:3306/Library";
+	private String Databaseuser="root";
+	private String Databasepass="root";
+	private String JDBCDriver="com.mysql.jdbc.Driver";
+	
+	public Connection Connectsql(Connection connect) {
+		try {
+			Class.forName(JDBCDriver);//JDBC驱动程序
+			System.out.println("Success loading Mysql Driver!");
+		}
+		catch(Exception e) {
+			System.out.println("Error loading Mysql Driver!");
+			e.printStackTrace();
+		}
+		
+		try {
+			connect = DriverManager.getConnection(Databaseaddress,Databaseuser,Databasepass);//服务器/数据库名、用户名、密码
+			System.out.println("Success connect Mysql server!");
+		}catch (Exception e) {
+			System.out.println("Error connect Mysql server!");
+			e.printStackTrace();
+		}
+		return connect;
+	}
+	
+	public void closeConnect(Connection connect) {
+		if(connect!=null) {
+			try {
+				connect.close();
+				System.out.println("Close connect sql.");
+			} catch (SQLException e) {
+				// TODO 自动生成的 catch 块
+				System.out.println("Error close connect");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		DatabaseUtil Connect = new DatabaseUtil();
+		Connection connect = null;
+		connect = Connect.Connectsql(connect);
+		Connect.closeConnect(connect);
+	}
+}

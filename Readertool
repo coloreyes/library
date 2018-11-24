@@ -1,0 +1,245 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+import Util.DatabaseUtil;
+import model.Borrow_Records;
+
+/**
+ * @author 马彧豪 16130120164 603337046@qq.com
+ *
+ * 2018年11月24日
+ * @param <Borrow_Records>
+ */
+public class Readertool {
+
+	/**
+	 * 
+	 *Readertool.java
+	 */
+	private List<Borrow_Records> Record_List= new ArrayList<>();
+	
+	public Readertool() {
+		// TODO 自动生成的构造函数存根
+		this.Load_Record();
+	}
+	
+	public void selectbook_name(String book_name) {
+		String sql = new String();
+		sql="select * from books where book_name=?";
+		
+		try {
+			ResultSet rs = Select(sql, book_name);
+			do {
+				System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
+				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
+				System.out.println(rs.getString("update_date"));
+			}while(rs.next());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void selectbook_type(String book_type) {
+		String sql = new String();
+		sql="select * from books where book_type=?";
+		
+		try {
+			ResultSet rs = Select(sql, book_type);
+			do {
+				System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
+				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
+				System.out.println(rs.getString("update_date"));
+			}while(rs.next());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void borrow(Readers reader) {
+		String record_id = new String();
+		String borrow_reader_id= new String();
+		String borrow_book_id= new String();
+		String borrow_date= new String();
+		String return_date = new String();
+		String back_or_not = new String();
+		String day_of_timeout = new String();
+		String sql = new String();
+		
+		borrow_reader_id = reader.user_id;
+		Date now = new Date();
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+		record_id = sdf.format(now);
+		record_id = String.valueOf(Integer.valueOf(record_id)*1000+Record_List.size());
+		borrow_date = f.format(now);
+		back_or_not = "NO";
+		day_of_timeout = "0";
+		System.out.println("The size of record is "+Record_List.size());
+		System.out.println("The now record id: "+record_id);
+		sql="insert into borrow_record value(?,?,?,?,?,?,?)";
+		
+		Scanner in = new Scanner(System.in);
+		System.out.println("input id of the book which you want to borrow:");
+		borrow_book_id = in.nextLine();
+		
+		ResultSet rs=Select("select * from books where book_id=?",borrow_book_id);
+		try {
+			if(rs==null) {
+				System.out.println("the book: "+borrow_book_id+" isnot exist.");
+				return;
+			}
+			
+			Update(sql,record_id,borrow_reader_id,borrow_book_id,borrow_date,return_date,back_or_not,day_of_timeout);
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	}
+	
+	public void back(Readers reader) {
+		Scanner in = new Scanner(System.in);
+		String return_date = new String();
+		String borrow_date= new String();
+		String back_or_not = new String();
+		String day_of_timeout = new String();
+		String record_id = new String();
+		int timeout_num;
+		float price;
+		
+		Date now = new Date();
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return_date = f.format(now);
+		record_id=in.nextLine();
+		ResultSet rs=Select("select borrow_date from borrow_record where record_id=? and borrow_reader_id=?",record_id,reader.user_id);
+		
+		try {
+			if(rs==null) {
+				System.out.println("The record: "+record_id+" isnot exist.");
+				return;
+			}
+			borrow_date=rs.getString("borrow_date");
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		
+		try {
+			Date borrow_time = f.parse(borrow_date);
+			timeout_num=(int) ((now.getTime()-borrow_time.getTime())/(1000 * 60 * 60 * 24))-45;
+			if(timeout_num<0) {
+				timeout_num=0;
+			}
+			day_of_timeout=String.valueOf(timeout_num);
+			price=(float) ((float) timeout_num*1.2);
+			reader.balance = String.valueOf(Float.parseFloat(reader.balance)-price);
+			System.out.println("you out deadline "+timeout_num+" days.");
+			System.out.println("you should pay "+price+" yuan.");
+		} catch (ParseException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		
+		
+		back_or_not="YES";
+		Update("update readers set balance=?",reader.balance);
+		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where record_id=?",return_date,back_or_not,day_of_timeout,record_id);
+	}
+	
+
+	public void personalinformation(Readers reader) {
+		reader.PrintReader();
+	}
+	
+	public Readers GetInformation(Readers reader){
+		ResultSet rs = Select("select * from readers where reader_id=?",reader.user_id);
+		
+		try {
+			reader.user_name=rs.getString("reader_name");
+			reader.borrow_book_num=rs.getString("borrow_book_num");
+			reader.balance=rs.getString("balance");
+			reader.address=rs.getString("address");
+			reader.company=rs.getString("company");
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		return reader;
+	}
+	public ResultSet Select(String sql,String ...args) {
+		DatabaseUtil Connect = new DatabaseUtil();
+		Connection connect=null;
+		connect = Connect.Connectsql(connect);
+		ResultSet rs1 = null;
+		try {
+			PreparedStatement pstmt = connect.prepareStatement(sql);
+			for(int i = 1;i <= args.length;i++) {
+				pstmt.setString(i, args[i-1]);
+			}
+			rs1 = pstmt.executeQuery();
+			rs1.next();
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		return rs1;
+	}
+	
+	public void Update(String sql,String ...args) {
+		DatabaseUtil Connect = new DatabaseUtil();
+		Connection connect=null;
+		connect = Connect.Connectsql(connect);
+		try {
+			PreparedStatement pstmt = connect.prepareStatement(sql);
+			for(int i = 1;i <= args.length;i++) {
+				pstmt.setString(i, args[i-1]);
+			}
+			pstmt.executeUpdate();
+			connect.close();
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	}
+	
+	private void Load_Record() {
+		ResultSet rs = Select("select * from borrow_record");
+		try {
+			
+			 do {
+				Borrow_Records record = new Borrow_Records(rs.getString("record_id"),rs.getString("borrow_reader_id"),rs.getString("borrow_book_id"),rs.getString("borrow_date"),
+						rs.getString("return_date"),rs.getString("back_or_not"),rs.getString("day_of_timeout"));
+				Record_List.add(record);
+			}while(rs.next());
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void select_record(Readers reader) {
+		ResultSet rs = Select("select * from borrow_record where borrow_reader_id=?",reader.user_id);
+		try {
+			if(rs==null) {
+				System.out.println("no record");
+				return;
+			}
+			do {
+				System.out.println(rs.getString("record_id")+" "+rs.getString("borrow_reader_id")+" "+rs.getString("borrow_book_id")+" "+rs.getString("borrow_date")+" "+
+						rs.getString("return_date")+" "+rs.getString("back_or_not")+" "+rs.getString("day_of_timeout"));
+			}while(rs.next());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}

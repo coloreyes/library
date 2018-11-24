@@ -6,12 +6,11 @@ package model;
  *
  */
 
-public class Readers extends Users
-{
-	private int borrow_book_num;
-	private float balance;
-	private String address;
-	private String company;
+public class Readers extends Users{
+	public String borrow_book_num;
+	public String balance;
+	public String address;
+	public String company;
 	
 	public Readers() 
 	{
@@ -19,7 +18,7 @@ public class Readers extends Users
 		// TODO Auto-generated constructor stub
 	}
 
-	public Readers(int borrow_book_num, float balance, String address, String company) 
+	public Readers(String borrow_book_num, String balance, String address, String company) 
 	{
 		super();
 		this.borrow_book_num = borrow_book_num;
@@ -28,19 +27,19 @@ public class Readers extends Users
 		this.company = company;
 	}
 
-	public int getBorrow_book_num() {
+	public String getBorrow_book_num() {
 		return borrow_book_num;
 	}
 
-	public void setBorrow_book_num(int borrow_book_num) {
+	public void setBorrow_book_num(String borrow_book_num) {
 		this.borrow_book_num = borrow_book_num;
 	}
 
-	public float getBalance() {
+	public String getBalance() {
 		return balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(String balance) {
 		this.balance = balance;
 	}
 
@@ -60,45 +59,13 @@ public class Readers extends Users
 		this.company = company;
 	}
 	
-	public Reader GetInformation(){//获取对应读者的信息
-		ResultSet rs = Select("select * from readers where reader_id=?",this.user_id);
-		try {
-			this.reader_name=rs.getString("reader_name");
-			this.borrow_book_num=Integer.valueOf(rs.getString("borrow_book_num"));
-			this.balance=Float.parseFloat(rs.getString("balance"));
-			this.address=rs.getString("address");
-			this.company=rs.getString("company");
-		} catch (SQLException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
-		return this;
-	}
-	public ResultSet Select(String sql,String ...args) {
-		DatabaseUtil Connect = new DatabaseUtil();
-		Connection connect=null;
-		connect = Connect.Connectsql(connect);
-		ResultSet rs1 = null;
-		try {
-			PreparedStatement pstmt = connect.prepareStatement(sql);
-			for(int i = 1;i <= args.length;i++) {
-				pstmt.setString(i, args[i-1]);
-			}
-			rs1 = pstmt.executeQuery();
-			rs1.next();
-		} catch (SQLException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
-		return rs1;
-	}
+	
 	public void PrintReader() {
-		System.out.println(this.user_id);
-		System.out.println(this.reader_name);
-		System.out.println(this.borrow_book_num);
-		System.out.println(this.balance);
-		System.out.println(this.address);
-		System.out.println(this.company);
+		System.out.println("Your id: "+this.user_id);
+		System.out.println("Your name: "+this.user_name);
+		System.out.println("How many books you borrow: "+this.borrow_book_num);
+		System.out.println("Your balance: "+this.balance);
+		System.out.println("Your address: "+this.address);
+		System.out.println("Your company: "+this.company);
 	}
-
 }

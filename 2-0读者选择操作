@@ -3,60 +3,82 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class readerSearch0 extends JFrame {
+public class ReaderFrm extends JFrame {
 
 	private JPanel contentPane;
+
+
 	/**
 	 * Create the frame.
 	 */
-	public readerSearch0() {
+	public ReaderFrm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		setTitle("欢迎使用");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(36, 92, 358, 111);
+		panel.setBounds(14, 36, 275, 58);
 		contentPane.add(panel);
 		
+		JLabel label_2= new JLabel("选择您所需的操作：");
+		label_2.setFont(new Font("隶书",Font.BOLD,18));
+		label_2.setIcon(new ImageIcon(ReaderFrm.class.getResource("/image/bell.png")));
+		panel.add(label_2);
 		
-		JButton btnNewButton_2 = new JButton("按书名查询");
-		btnNewButton_2.addActionListener(new ActionListener() {
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(51, 107, 320, 94);
+		contentPane.add(panel_1);
+		
+		JButton btnNewButton = new JButton("搜      索");
+		btnNewButton.setFont(new Font("宋体",Font.BOLD,15));
+		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				readerSearch1 readerSearch=new readerSearch1();
+				readerSearch0 readerSearch=new readerSearch0();
 				readerSearch.setVisible(true);
 				
 			}
 		});
-		panel.add(btnNewButton_2);
+		panel_1.add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("按作者查询");
-		panel.add(btnNewButton_1);
+		JButton btnNewButton_1 = new JButton("借      书");
+		btnNewButton_1.setFont(new Font("宋体",Font.BOLD,15));
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				readerBorrow0 readerBorrow=new readerBorrow0();
+				readerBorrow.setVisible(true);
+				
+			}
+		});
+		panel_1.add(btnNewButton_1);
 		
-		JButton btnNewButton = new JButton("按类型查询");
-		panel.add(btnNewButton);
+		JButton btnNewButton_2 = new JButton("还      书");
+		btnNewButton_2.setFont(new Font("宋体",Font.BOLD,15));
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		panel_1.add(btnNewButton_2);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(14, 16, 257, 63);
-		contentPane.add(panel_1);
-		
-		JLabel lblNewLabel = new JLabel("请输入查询方式");
-		lblNewLabel.setFont(new Font("宋体",Font.BOLD,14));
-		lblNewLabel.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/bell.png")));
-		panel_1.add(lblNewLabel);
+		JButton btnNewButton_3 = new JButton(" 个人信息查询  ");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		panel_1.add(btnNewButton_3);
 	}
-
-}

@@ -1,0 +1,95 @@
+package View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.JTableHeader;
+
+import model.Users;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JTextPane;
+
+public class readerBorrow0 extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+
+	/**
+	 * Create the frame.
+	 */
+	public readerBorrow0() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 19, 432, 64);
+		contentPane.add(panel);
+		
+		JLabel lblNewLabel = new JLabel("输入图书编号：");
+		lblNewLabel.setFont(new Font("宋体",Font.BOLD,14));
+		lblNewLabel.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/bell.png")));
+		panel.add(lblNewLabel);
+		
+		textField = new JTextField();
+		panel.add(textField);
+		textField.setColumns(15);
+		
+		JLabel lblNewLabel_1 = new JLabel("请核对图书信息");
+		lblNewLabel_1.setFont(new Font("宋体",Font.BOLD,14));
+		lblNewLabel_1.setBounds(35, 79, 105, 31);
+		contentPane.add(lblNewLabel_1);
+		lblNewLabel_1.setVisible(false);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(14, 110, 404, 78);
+		contentPane.add(panel_2);
+		panel_2.setVisible(false);
+		
+		JButton btnNewButton = new JButton("确定");
+		panel.add(btnNewButton);
+		btnNewButton.setFont(new Font("宋体",Font.BOLD,13));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblNewLabel_1.setVisible(true);  
+				  panel_2.setVisible(true);
+					//JOptionPane.showMessageDialog(null, "借阅成功","提示",JOptionPane.INFORMATION_MESSAGE);
+					//JOptionPane.showMessageDialog(null, "对不起，您的借阅数量已达上限","提示",JOptionPane.INFORMATION_MESSAGE);
+			
+			}
+		});
+		
+
+		String[] fields= {"书名","作者","类型"};
+		Object[][] data= {{"Qingchengzhilian","Zhang Ailing","Literature"},
+				
+		};
+		
+		JTable table = new JTable(data,fields);
+		
+		JTableHeader jheader=table.getTableHeader();
+		panel_2.add(jheader,BorderLayout.NORTH);
+		panel_2.add(table,BorderLayout.CENTER);
+		
+				
+	
+		
+	}
+}

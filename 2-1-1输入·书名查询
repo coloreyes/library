@@ -1,0 +1,74 @@
+package View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.JTableHeader;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class readerSearch1 extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTable table;
+	private JButton btnNewButton;
+
+	/**
+	 * Create the frame.
+	 */
+	public readerSearch1() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		setTitle("查询");
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 22, 402, 51);
+		contentPane.add(panel);
+		
+		JLabel lblNewLabel = new JLabel("请输入书名:");
+		lblNewLabel.setFont(new Font("宋体",Font.BOLD,13));
+		panel.add(lblNewLabel);
+		
+		textField = new JTextField();
+		panel.add(textField);
+		textField.setColumns(18);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(27, 86, 375, 138);
+		contentPane.add(panel_1);
+		panel_1.setVisible(false);
+		
+		btnNewButton = new JButton("Search");
+		btnNewButton.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/search.png")));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				panel_1.setVisible(true);
+			}
+		});
+		panel.add(btnNewButton);
+		
+		
+		
+		String[] fields= {"书名","作者","位置","馆藏数量","剩余数量"};
+		Object[][] data= {{"Game","Zhang","A01","12","2"}};
+		table = new JTable(data,fields);
+		
+		JTableHeader jheader=table.getTableHeader();
+		panel_1.add(jheader,BorderLayout.NORTH);
+		panel_1.add(table,BorderLayout.CENTER);
+	}
+}

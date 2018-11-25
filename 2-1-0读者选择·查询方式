@@ -1,0 +1,62 @@
+package View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+
+public class readerSearch0 extends JFrame {
+
+	private JPanel contentPane;
+	/**
+	 * Create the frame.
+	 */
+	public readerSearch0() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(36, 92, 358, 111);
+		contentPane.add(panel);
+		
+		
+		JButton btnNewButton_2 = new JButton("按书名查询");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				readerSearch1 readerSearch=new readerSearch1();
+				readerSearch.setVisible(true);
+				
+			}
+		});
+		panel.add(btnNewButton_2);
+		
+		JButton btnNewButton_1 = new JButton("按作者查询");
+		panel.add(btnNewButton_1);
+		
+		JButton btnNewButton = new JButton("按类型查询");
+		panel.add(btnNewButton);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(14, 16, 257, 63);
+		contentPane.add(panel_1);
+		
+		JLabel lblNewLabel = new JLabel("请输入查询方式");
+		lblNewLabel.setFont(new Font("宋体",Font.BOLD,14));
+		lblNewLabel.setIcon(new ImageIcon(LogOnFrm.class.getResource("/image/bell.png")));
+		panel_1.add(lblNewLabel);
+	}
+
+}

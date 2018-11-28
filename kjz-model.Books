@@ -1,0 +1,108 @@
+package model;
+
+/**
+ * 图书实体类
+ */
+
+import java.util.Date;
+
+public class Books 
+{
+	private String book_id;
+	private String book_name;
+	private String book_type;
+	private String author;
+	private float price;
+	private int sum; //总量
+	private int result;//剩余量
+	private String update_date; //采购日期
+	public int exist_or_not;
+	
+	public Books()
+	{
+		super();//继承的是Object类
+	}
+	
+	
+
+	public Books(String book_id, String book_name, String book_type, String author, float price, int sum, int result,
+			String update_date) 
+	{
+		super();
+		this.book_id = book_id;
+		this.book_name = book_name;
+		this.book_type = book_type;
+		this.author = author;
+		this.price = price;
+		this.sum = sum;
+		this.result = result;
+		this.update_date = update_date;
+	}
+
+	
+
+	public String getBook_id() {
+		return book_id;
+	}
+
+	public void setBook_id(String book_id) {
+		this.book_id = book_id;
+	}
+
+	public String getBook_name() {
+		return book_name;
+	}
+
+	public void setBook_name(String book_name) {
+		this.book_name = book_name;
+	}
+
+	public String getBook_type() {
+		return book_type;
+	}
+
+	public void setBook_type(String book_type) {
+		this.book_type = book_type;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public int getSum() {
+		return sum;
+	}
+
+	public void setSum(int sum) {
+		this.sum = sum;
+	}
+
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
+	}
+
+	public String getUpdate_date() {
+		return update_date;
+	}
+
+	public void setUpdate_date(String update_date) {
+		this.update_date = update_date;
+	}
+
+}

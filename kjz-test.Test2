@@ -1,0 +1,98 @@
+package test;
+
+import java.util.Scanner;
+
+import dao.BookDAO;
+import model.Books;
+
+public class Test2 {
+
+	public static void main(String[] args)
+	{
+		// TODO Auto-generated method stub
+		BookDAO bookdao = new BookDAO();
+		Scanner input = new Scanner(System.in);
+		System.out.println("请输入要查询的书籍的书名和作者名：");
+		String BookName = input.nextLine();
+		String Author = input.nextLine();
+		try 
+		{
+			//查询书籍是否存在并打印出来书籍基本信息
+			Books book = bookdao.listBook(BookName, Author);
+			if(book.exist_or_not == 1)
+			{
+				System.out.println(book.getBook_id());
+				System.out.println(book.getBook_name());
+				System.out.println(book.getBook_type());
+				System.out.println(book.getAuthor());
+				System.out.println(book.getPrice());
+				System.out.println(book.getSum());
+				System.out.println(book.getResult());
+				System.out.println(book.getUpdate_date());
+				
+				//若存在，更新总量
+				int addedNum = 10;
+				int result1 = bookdao.updateBookSum(book, addedNum);
+				if(result1==1) 
+				{
+					System.out.println("更新图书总量成功");
+				}
+				else 
+				{
+					System.out.println("更新图书总量失败");
+				}
+				
+				System.out.println(book.getSum());
+				
+				//若存在，同时更新采购时间为当前时间
+				int result2 = bookdao.updateBookUpdate_date(book);
+				if(result2==1) 
+				{
+					System.out.println("更新图书采购日期成功");
+				}
+				else 
+				{
+					System.out.println("更新图书采购日期失败");
+				}
+				
+				System.out.println(book.getUpdate_date());
+			}
+			
+			//若不存在，添加新书
+			if(book.exist_or_not == 0)
+			{
+				System.out.println("输入书籍类型：");
+				String type = input.nextLine();
+				String BookID = bookdao.createBookID(type);
+				book.setBook_id(BookID);
+				book.setBook_name(BookName);
+				book.setBook_type(type);
+				book.setAuthor(Author);
+				book.setPrice(10);
+				book.setResult(20);
+				book.setSum(40);
+				book.setUpdate_date("14/11/2018");
+				
+			    int result1 = bookdao.addBook(book);
+				
+				if(result1 ==1) {
+					System.out.println("添加图书成功");
+				}else {
+					System.out.println("添加图书失败");
+				}
+			}
+			
+			
+			
+		} 
+		catch (Exception e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+
+	}
+
+}

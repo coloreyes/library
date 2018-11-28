@@ -1,0 +1,94 @@
+package model;
+
+/**
+ * 读者实体类
+ * @author JenaKJZ
+ *
+ */
+
+public class Readers 
+{
+	private String reader_id;
+	private String reader_name;
+	private String reader_password;
+	private int borrow_book_num;
+	private float balance;
+	private String address;
+	private String company;
+	public int exist_or_not;
+	
+	public Readers() 
+	{
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Readers(String reader_id,String reader_name,String reader_password,int borrow_book_num, float balance, String address, String company) 
+	{
+		super();
+		this.reader_id = reader_id;
+		this.reader_name = reader_name;
+		this.reader_password = reader_password; 
+		this.borrow_book_num = borrow_book_num;
+		this.balance = balance;
+		this.address = address;
+		this.company = company;
+	}
+	
+	public String getReader_id() {
+		return reader_id;
+	}
+
+	public void setReader_id(String reader_id) {
+		this.reader_id = reader_id;
+	}
+
+	public String getReader_name() {
+		return reader_name;
+	}
+
+	public void setReader_name(String reader_name) {
+		this.reader_name = reader_name;
+	}
+
+	public String getReader_password() {
+		return reader_password;
+	}
+
+	public void setReader_password(String reader_password) {
+		this.reader_password = reader_password;
+	}
+
+	public int getBorrow_book_num() {
+		return borrow_book_num;
+	}
+
+	public void setBorrow_book_num(int borrow_book_num) {
+		this.borrow_book_num = borrow_book_num;
+	}
+
+	public float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+}

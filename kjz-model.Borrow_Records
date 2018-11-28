@@ -1,0 +1,94 @@
+package model;
+
+/**
+ * 借书记录实体类
+ * @param back_or_not
+ */
+
+import java.util.Date;
+
+public class Borrow_Records 
+{
+	private String record_id;
+	private String borrow_reader_id;
+	private String borrow_book_id;
+	private Date borrow_date;
+	private Date return_date;
+	private int back_or_not;
+	private String day_of_timeout;
+	
+	public Borrow_Records() 
+	{
+		super();
+	}
+
+	public Borrow_Records(String record_id, String borrow_reader_id, String borrow_book_id, Date borrow_date,
+			Date return_date, int back_or_not,String day_of_timeout) 
+	{
+		super();
+		this.record_id = record_id;
+		this.borrow_reader_id = borrow_reader_id;
+		this.borrow_book_id = borrow_book_id;
+		this.borrow_date = borrow_date;
+		this.return_date = return_date;
+        this.back_or_not = back_or_not;
+    	this.setDay_of_timeout(day_of_timeout);
+	}
+
+	public String getRecord_id() {
+		return record_id;
+	}
+
+	public void setRecord_id(String record_id) {
+		this.record_id = record_id;
+	}
+
+	public String getBorrow_reader_id() {
+		return borrow_reader_id;
+	}
+
+	public void setBorrow_reader_id(String borrow_reader_id) {
+		this.borrow_reader_id = borrow_reader_id;
+	}
+
+	public String getBorrow_book_id() {
+		return borrow_book_id;
+	}
+
+	public void setBorrow_book_id(String borrow_book_id) {
+		this.borrow_book_id = borrow_book_id;
+	}
+
+	public Date getBorrow_date() {
+		return borrow_date;
+	}
+
+	public void setBorrow_date(Date borrow_date) {
+		this.borrow_date = borrow_date;
+	}
+
+	public Date getReturn_date() {
+		return return_date;
+	}
+
+	public void setReturn_date(Date return_date) {
+		this.return_date = return_date;
+	}
+
+	public int getBack_or_not() {
+		return back_or_not;
+	}
+
+	public void setBack_or_not(int back_or_not) {
+		this.back_or_not = back_or_not;
+	}
+
+	public String getDay_of_timeout() {
+		return day_of_timeout;
+	}
+
+	public void setDay_of_timeout(String day_of_timeout) {
+		this.day_of_timeout = day_of_timeout;
+	}
+	
+}

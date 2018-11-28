@@ -1,0 +1,28 @@
+package test;
+
+import java.util.Scanner;
+
+import dao.UserDAO;
+import model.Users;
+
+public class Test1 {
+
+	public static void main(String[] args) 
+	{
+		/**
+		//验证用户登录
+		UserDAO userdao = new UserDAO();
+		Scanner input = new Scanner(System.in);
+		String user_id = input.nextLine();
+		String user_password = input.nextLine();
+		Users user = userdao.validate(user_id, user_password);
+				
+		System.out.println(user.getUser_id());
+		System.out.println(user.getUser_password());
+		System.out.println(user.getUser_name());
+		System.out.println(user.getUser_identity());
+		System.out.println(user.exist_or_not);
+*/
+	}
+
+}

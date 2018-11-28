@@ -1,0 +1,155 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import library.DBUtil;
+import library.StringUtil;
+import model.Books;
+import model.Readers;
+
+public class Borrow_Record_DAO 
+{
+	
+	
+	 //根据书籍编号查询书籍基本信息
+
+	public Books searchBook(String BookID) throws Exception
+	{
+		DBUtil dbutil = new DBUtil();
+		Connection con = dbutil.getCon();
+		Statement stmt =con.createStatement();
+		ResultSet rs = stmt.executeQuery("select * from books");
+		int i = 0;
+		Books book = new Books();
+
+		while(rs.next()) 
+		{
+			if(rs.getString("book_id").equals(BookID)) 
+			{
+				i = 1;
+				break;
+			}
+		}
+		
+		if(i==0) 
+		{
+			book.exist_or_not=0;
+		}
+		if(i==1) 
+		{
+			book.exist_or_not=1;
+			String sql = "select * from books where book_id = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, BookID);
+			ResultSet rs1 = pstmt.executeQuery();
+			rs1.next();
+			book.setBook_id(BookID);
+			book.setBook_name(rs1.getString("book_name"));
+			book.setBook_type(rs1.getString("book_type"));
+			book.setAuthor(rs1.getString("author"));
+			book.setPrice(rs1.getFloat("price"));
+			book.setSum(rs1.getInt("sum"));
+			book.setResult(rs1.getInt("result"));
+			book.setUpdate_date(rs1.getString("update_date"));
+			
+		}
+		dbutil.close(stmt, con);
+		return book;
+	}
+	
+	//根据读者编号查询读者个人信息
+	public Readers searchReader(String ReaderID) throws Exception 
+	{
+		DBUtil dbutil = new DBUtil();
+		Connection con;
+		con = dbutil.getCon();
+		Statement stmt =con.createStatement();
+		ResultSet rs = stmt.executeQuery("select * from readers");
+		int i = 0;
+		Readers reader = new Readers();
+
+		while(rs.next()) 
+		{
+			if(rs.getString("reader_id").equals(ReaderID)) 
+			{
+				i = 1;
+				break;
+			}
+		}
+		
+		if(i==0) 
+		{
+			reader.exist_or_not = 0;
+		}
+		if(i==1) 
+		{
+			reader.exist_or_not = 1;
+			String sql = "select * from readers where reader_id = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, ReaderID);
+			ResultSet rs1 = pstmt.executeQuery();
+			rs1.next();
+			//没有用到继承
+			reader.setReader_id(ReaderID);
+			reader.setReader_name(rs1.getString("reader_name"));
+			reader.setReader_password(rs1.getString("reader_password"));
+			reader.setBorrow_book_num(rs1.getInt("borrow_book_num"));
+			reader.setBalance(rs1.getFloat("balance"));
+			reader.setAddress(rs1.getString("address"));
+			reader.setCompany(rs1.getString("company"));
+			
+		}
+		dbutil.close(stmt, con);
+		return reader;
+		
+	}
+	
+	public void printReader(Readers reader)
+	{
+		System.out.print(reader.getReader_id() + '\t');
+		System.out.print(reader.getReader_name() + '\t');
+		System.out.print(reader.getBorrow_book_num());
+		System.out.print('\t');
+		System.out.print(reader.getBalance());
+		System.out.print('\t');
+		System.out.print(reader.getAddress() + '\t');
+		System.out.print(reader.getCompany() + '\t');
+	}
+	
+	public void printRecord(String ReaderID) throws Exception
+	{
+		DBUtil dbutil = new DBUtil();
+		Connection con;
+		con = dbutil.getCon();
+		String sql = "select * from borrow_record where borrow_reader_id = ?";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, ReaderID);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) 
+		{
+			String BookID = rs.getString("borrow_book_id");
+			String sql1 = "select * from books where book_id = ?";
+			PreparedStatement pstmt1 = con.prepareStatement(sql1);
+			pstmt1.setString(1, BookID);
+			ResultSet rs1 = pstmt1.executeQuery();
+			rs1.next();
+			String BookName = rs1.getString("book_name");
+			
+			System.out.print(BookID + '\t');
+			System.out.print(BookName + '\t');
+			System.out.print(rs.getString("borrow_date") + '\t');
+			System.out.print(rs.getString("return_date") + '\t');
+			System.out.print(rs.getString("back_or_not") + '\t');
+			System.out.print(rs.getString("day_of_timeout") + '\t');
+			System.out.println();
+		}
+	}
+
+}

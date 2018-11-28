@@ -1,0 +1,47 @@
+package test;
+
+import dao.BookDAO;
+import dao.Borrow_Record_DAO;
+import model.Books;
+import model.Readers;
+
+public class Test3 {
+
+	public static void main(String[] args) 
+	{
+		// TODO Auto-generated method stub
+		
+		Borrow_Record_DAO brdao = new Borrow_Record_DAO();
+		/**
+		//根据书籍编号查询书籍基本信息
+		try 
+		{
+			BookDAO bdao = new BookDAO();
+			String BookID = "99";
+			Books book = brdao.searchBook(BookID);
+			bdao.printBook(book);
+		} 
+		catch (Exception e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		/**
+		//根据读者编号查询读者基本信息并打印读者基本借阅记录
+		try
+		{
+			String ReaderID = "16123";
+			Readers reader = brdao.searchReader(ReaderID);
+			brdao.printReader(reader);
+			System.out.println();
+			brdao.printRecord(ReaderID);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+*/
+	}
+
+}

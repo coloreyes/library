@@ -1,0 +1,60 @@
+package test;
+
+import java.sql.SQLException;
+
+import dao.BookDAO;
+import model.Books;
+
+public class Test4 {
+
+	public static void main(String[] args) 
+	{
+		// TODO Auto-generated method stub
+		
+		/**
+		//注销图书测试
+		try 
+		{
+			BookDAO bookdao = new BookDAO();
+			Books book = new Books();
+			book.setBook_id("kjz04");
+			book.setBook_name("test04");
+			book.setBook_type("library");
+			book.setAuthor("kjz");
+			book.setPrice(10);
+			book.setResult(20);
+			book.setSum(40);
+			book.setUpdate_date("14/11/2018");
+			int result02 = bookdao.addBook(book);
+			
+			if(result02 ==1) 
+			{
+				System.out.println("添加图书成功");
+			}else 
+			{
+				System.out.println("添加图书失败");
+			}
+			
+			bookdao.printBook(book);
+			
+			int result2 = bookdao.deleteBook(book.getBook_id());
+			if(result2 ==1) 
+			{
+				System.out.println("注销图书成功");
+			}
+			else 
+			{
+				System.out.println("注销图书失败");
+			}
+		} 
+		catch (Exception e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+*/
+	}
+
+}

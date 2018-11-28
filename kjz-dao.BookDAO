@@ -1,0 +1,269 @@
+package dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+
+import library.DBUtil;
+import library.StringUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import model.Books;
+import model.Borrow_Records;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+//import java.util.List;
+
+public class BookDAO 
+{
+	DBUtil dbutil = new DBUtil();
+	/**
+	 * 若图书不存在，则根据查询时返回的book对象
+	 * 进行图书添加 
+	 * （在调用该函数前，要先对book对象各属性进行赋值）
+	 */
+	public int addBook(Books book) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		book.exist_or_not = 1;
+		String sql = "insert into books values(?,?,?,?,?,?,?,?)";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, book.getBook_id());
+		pstmt.setString(2, book.getBook_name());
+		pstmt.setString(3, book.getBook_type());
+		pstmt.setString(4, book.getAuthor());
+		pstmt.setFloat(5, book.getPrice());
+		pstmt.setInt(6, book.getSum());
+		pstmt.setInt(7, book.getResult());
+		pstmt.setString(8, book.getUpdate_date());
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 图书删除 by管理员
+	 */
+	public int deleteBook(String book_id) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		String sql = "delete from books where book_id = ?";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, book_id);
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 更新库图书总量 
+	 */
+	public int updateBookSum(Books book,int addedNum) throws Exception
+	{
+		//返回int result 来确认更新是否成功
+		Connection con = dbutil.getCon();
+		book.setSum(book.getSum()+addedNum);
+		String sql = "update books set sum=? where book_id=?";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setInt(1, book.getSum());
+		pstmt.setString(2, book.getBook_id());
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 更新库图书采购日期 
+	 */
+	public int updateBookUpdate_date(Books book) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		Date date = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+		String sql = "update books set update_date=? where book_id=?";
+		
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, ft.format(date));
+		pstmt.setString(2, book.getBook_id());
+		
+		int result = pstmt.executeUpdate();
+		dbutil.close(pstmt, con);
+		
+		return result;
+	}
+	
+	/**
+	 * 根据书名和作者
+	 * 查询书籍是否存在
+	 * 
+	 */
+	public Books listBook(String BookName,String Author) throws Exception
+	{
+		Connection con = dbutil.getCon();
+		int i = 0;
+		Books book = new Books();
+        StringBuffer sb=new StringBuffer("select * from books");
+        
+        if(StringUtil.isNotEmpty(BookName))
+        {
+        	sb.append(" where book_name like '%" + BookName + "%'" );
+        }
+        if(StringUtil.isNotEmpty(BookName))
+        {
+        	sb.append(" and author like '%" + Author + "%'" );
+        }
+        
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement(sb.toString());
+		ResultSet rs = pstmt.executeQuery();
+
+		while(rs.next()) 
+		{
+			if(rs.getString("book_name").equals(BookName)&&rs.getString("author").equals(Author)) 
+			{
+				i = 1;
+				break;
+			}
+		}
+		if(i==0) 
+		{
+			book.exist_or_not=0;
+		}
+		if(i==1) 
+		{
+			book.exist_or_not=1;
+			String sql = "select book_id,book_type,price,sum,result,update_date from books where book_name = ? and author = ?";
+			PreparedStatement pstmt1 = con.prepareStatement(sql);
+			pstmt1.setString(1, BookName);
+			pstmt1.setString(2, Author);
+			ResultSet rs1 = pstmt1.executeQuery();
+			rs1.next();
+			book.setBook_id(rs1.getString("book_id"));
+			book.setBook_type(rs1.getString("book_type"));
+			book.setPrice(rs1.getFloat("price"));
+			book.setSum(rs1.getInt("sum"));
+			book.setResult(rs1.getInt("result"));
+			book.setUpdate_date(rs1.getString("update_date"));
+			book.setBook_name(BookName);
+			book.setAuthor(Author);
+		}
+		dbutil.close(pstmt, con);
+	
+	return book;
+      
+
+	}
+	
+	//打印查询到的某书的基本信息*
+	public void printBook(Books book) throws SQLException
+	{
+		System.out.print(book.getBook_id() + '\t');
+		System.out.print(book.getBook_name() + '\t');
+    	System.out.print(book.getBook_type() + '\t');
+    	System.out.print(book.getAuthor() + '\t');
+    	System.out.print(book.getPrice());
+    	System.out.print('\t');
+    	System.out.print(book.getSum());
+    	System.out.print('\t');
+    	System.out.print(book.getResult());
+    	System.out.print('\t');
+    	System.out.print(book.getUpdate_date());
+    	System.out.println();
+		
+	}
+	
+	//系统生成书籍编号
+	public String createBookID(String type) throws Exception
+	{
+		String BookID = null;
+		Connection con = dbutil.getCon();
+		String sql = "select count(book_type) as count_id from books where book_type = ? group by book_type";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		
+		if(type.equals("fiction"))
+		{
+			pstmt.setString(1, "fiction");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "f" + String.valueOf(temp);
+			
+		}
+		
+		if(type.equals("literature"))
+		{
+			pstmt.setString(1, "literature");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "lit" + String.valueOf(temp);
+			
+		}
+		
+		if(type.equals("education"))
+		{
+			pstmt.setString(1, "education");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "edu" + String.valueOf(temp);
+			
+		}
+		
+		if(type.equals("humanitiy"))
+		{
+			pstmt.setString(1, "humanitiy");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "h" + String.valueOf(temp);
+			
+		}
+		
+		if(type.equals("economic"))
+		{
+			pstmt.setString(1, "economic");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "ec" + String.valueOf(temp);
+			
+		}
+		
+		if(type.equals("life"))
+		{
+			pstmt.setString(1, "life");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "life" + String.valueOf(temp);
+			
+		}
+		
+		if(type.equals("success"))
+		{
+			pstmt.setString(1, "success");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int temp = rs.getInt(1) + 1;
+			BookID = "s" + String.valueOf(temp);
+			
+		}
+		
+		return BookID;
+
+
+	}
+}

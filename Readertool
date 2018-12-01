@@ -256,23 +256,8 @@ public class Readertool {
 		}
 	}
 	
-	public boolean reader_register() {
-		Readers reader = new Readers();
+	public boolean reader_register(Readers reader) {
 		
-		Scanner in = new Scanner(System.in);
-		System.out.println("Input reader id");
-		reader.setUser_id(in.nextLine());
-		System.out.println("Input reader name");
-		reader.setUser_name(in.nextLine());
-		System.out.println("Input reader password");
-		reader.setUser_password(in.nextLine());
-		System.out.println("Input reader balance");
-		reader.setBalance(in.nextLine());
-		System.out.println("Input reader address");
-		reader.setAddress(in.nextLine());
-		System.out.println("Input reader company");
-		reader.setCompany(in.nextLine());
-		reader.setBorrow_book_num("0");
 		
 		
 		

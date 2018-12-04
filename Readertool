@@ -107,11 +107,13 @@ public class Readertool {
 		
 		ResultSet rs=Select("select * from books where book_id=?",borrow_book_id);
 		try {
-			if(rs==null) {
+			if(!rs.first()) {
 				System.out.println("the book: "+borrow_book_id+" isnot exist.");
 				return;
 			}
-			
+			int count=1;
+			reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)+count);
+			Update_borrow(reader.borrow_book_num,reader.user_id);
 			Update(sql,record_id,borrow_reader_id,borrow_book_id,borrow_date,return_date,back_or_not,day_of_timeout);
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
@@ -125,19 +127,20 @@ public class Readertool {
 		String borrow_date= new String();
 		String back_or_not = new String();
 		String day_of_timeout = new String();
-		String record_id = new String();
+		String back_book_id = new String();
 		int timeout_num;
 		float price;
 		
 		Date now = new Date();
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return_date = f.format(now);
-		record_id=in.nextLine();
-		ResultSet rs=Select("select borrow_date from borrow_record where record_id=? and borrow_reader_id=?",record_id,reader.user_id);
+		System.out.println("Input the book id ");
+		back_book_id=in.nextLine();
+		ResultSet rs=Select("select borrow_date from borrow_record where borrow_book_id=? and borrow_reader_id=?",back_book_id,reader.user_id);
 		
 		try {
-			if(rs==null) {
-				System.out.println("The record: "+record_id+" isnot exist.");
+			if(!rs.first()) {
+				System.out.println("The book: "+back_book_id+" you did not borrow.");
 				return;
 			}
 			borrow_date=rs.getString("borrow_date");
@@ -164,8 +167,10 @@ public class Readertool {
 		
 		
 		back_or_not="YES";
-		Update("update readers set balance=?",reader.balance);
-		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where record_id=?",return_date,back_or_not,day_of_timeout,record_id);
+		int count= 1;
+		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)-count);
+		Update_back(reader.balance,reader.borrow_book_num,reader.user_id);
+		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where borrow_book_id=?",return_date,back_or_not,day_of_timeout,back_book_id);
 	}
 	
 
@@ -224,6 +229,39 @@ public class Readertool {
 		}
 	}
 	
+	public void Update_back(String balance,String num,String reader_id) {
+		DatabaseUtil Connect = new DatabaseUtil();
+		Connection connect=null;
+		connect = Connect.Connectsql(connect);
+		try {
+			PreparedStatement pstmt = connect.prepareStatement("update readers set balance=?,borrow_book_num=? where reader_id=?");
+			pstmt.setFloat(1, Float.parseFloat(balance));
+			pstmt.setInt(2, Integer.parseInt(num));
+			pstmt.setString(3, reader_id);
+			pstmt.executeUpdate();
+			connect.close();
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	}
+	
+	public void Update_borrow(String num,String reader_id) {
+		DatabaseUtil Connect = new DatabaseUtil();
+		Connection connect=null;
+		connect = Connect.Connectsql(connect);
+		try {
+			PreparedStatement pstmt = connect.prepareStatement("update readers set borrow_book_num=? where reader_id=?");
+			pstmt.setInt(1, Integer.parseInt(num));
+			pstmt.setString(2, reader_id);
+			pstmt.executeUpdate();
+			connect.close();
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	}
+	
 	private void Load_Record() {
 		ResultSet rs = Select("select * from borrow_record");
 		try {
@@ -257,9 +295,6 @@ public class Readertool {
 	}
 	
 	public boolean reader_register(Readers reader) {
-		
-		
-		
 		
 		ResultSet rs = Select("select reader_id from readers where reader_id=?",reader.user_id);
 		try {

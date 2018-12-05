@@ -28,6 +28,11 @@ public class Readertool {
 	 *Readertool.java
 	 */
 	private List<Borrow_Records> Record_List= new ArrayList<>();
+	public Object result[][]=new Object[10][5];
+    public Object result1[][]=new Object[10][5];
+    public Object result2[][]=new Object[100][5];
+    public Object result3[][]=new Object[100][3];
+    public Object result4[][]=new Object[100][4];
 	
 	public Readertool() {
 		// TODO 自动生成的构造函数存根
@@ -37,17 +42,23 @@ public class Readertool {
 	public void selectbook_name(String book_name) {
 		String sql = new String();
 		sql="select * from books where book_name=?";
-		
+		int i=0;
 		try {
 			ResultSet rs = Select(sql, book_name);
-			if(rs==null) {
+			if(!rs.first()) {
 				System.out.println("No this book");
 				return;
 			}
 			do {
+				 	result[i][0]=rs.getString("book_name");
+	                result[i][1]=rs.getString("author");
+	                result[i][2]=rs.getFloat("price");
+	                result[i][3]=rs.getInt("sum");
+	                result[i][4]=rs.getInt("result");
 				System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
 				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
 				System.out.println(rs.getString("update_date"));
+				i++;
 			}while(rs.next());
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -57,28 +68,133 @@ public class Readertool {
 	public void selectbook_type(String book_type) {
 		String sql = new String();
 		sql="select * from books where book_type=?";
-		
+		int i=0;
 		try {
 			ResultSet rs = Select(sql, book_type);
-			if(rs==null) {
+			if(!rs.first()) {
 				System.out.println("No this type");
 				return;
 			}
 			do {
+				result2[i][0]=rs.getString("book_name");
+                result2[i][1]=rs.getString("author");
+                result2[i][2]=rs.getFloat("price");
+                result2[i][3]=rs.getInt("sum");
+                result2[i][4]=rs.getInt("result");
 				System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
 				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
 				System.out.println(rs.getString("update_date"));
+				i++;
 			}while(rs.next());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void borrow(Readers reader) {
+	public void selectauthor_name(String author_name) {
+
+		String sql = new String();
+		sql="select * from books where author=?";
+		int i=0;
+		try {
+			ResultSet rs = Select(sql, author_name);
+			if(!rs.first()) {
+				System.out.println("No this author :"+author_name);
+				return;
+			}
+			do {
+				
+                result1[i][0]=rs.getString("book_name");
+                result1[i][1]=rs.getString("author");
+                result1[i][2]=rs.getFloat("price");
+                result1[i][3]=rs.getInt("sum");
+                result1[i][4]=rs.getInt("result");
+				/*System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
+				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
+				System.out.println(rs.getString("update_date"));*/
+                 i++;
+			}while(rs.next());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String selectbook_id(String book_id) {
+
+		String sql = new String();
+		sql="select * from books where book_id=?";
+		int i=0;
+
+		try {
+			ResultSet rs = Select(sql, book_id);
+            if(!rs.first()) {
+            	System.out.println("No this book "+book_id);
+            	return "NO";
+            }
+            else {
+			do {
+				 	result3[i][0]=rs.getString("book_name");
+	                result3[i][1]=rs.getString("author");
+	                result3[i][2]=rs.getString("book_type");
+				/*System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
+				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
+				System.out.println(rs.getString("update_date"));*/
+	                i++;
+			}while(rs.next());}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return "YES";
+	}
+	
+	public void checkhistory(Readers reader) {
+		
+		String sql = new String();
+		sql="select * from borrow_record where borrow_reader_id=?";
+		int i=0;
+
+		try {
+			ResultSet rs = Select(sql, reader.user_id);
+			if(!rs.first()) {
+				System.out.println("the reader "+reader.user_id+"no borrow record");
+			}
+			do {
+				    result4[i][0]=rs.getString("borrow_book_id");
+	                result4[i][1]=rs.getString("borrow_date");
+	                result4[i][2]=rs.getString("return_date");
+	                result4[i][3]=rs.getString("back_or_not");
+				/*System.out.print(rs.getString("book_id")+" "+rs.getString("book_name")+" "+rs.getString("book_type")+" ");
+				System.out.print(rs.getString("author")+" "+rs.getFloat("price")+" "+rs.getInt("sum")+" "+rs.getInt("result")+" ");
+				System.out.println(rs.getString("update_date"));*/
+	                i++;
+			}while(rs.next());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String borrow(Readers reader,String id) {
+		String result=new String();
+		
 		if(Integer.parseInt(reader.borrow_book_num)>=5) {
 			System.out.println("You has borrowed five books");
-			return;
+			return "Full";
 		}
+		try {
+			ResultSet r = Select("select result from books where book_id=?",id);
+			if(!r.first()) {
+				System.out.println("No this book "+id);
+				return "NO";
+			}
+			result=r.getString("result");
+			if(result.equals("0")) {
+				System.out.println("the book "+id+"result 0.");
+				return "NO";
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		String record_id = new String();
 		String borrow_reader_id= new String();
 		String borrow_book_id= new String();
@@ -88,41 +204,67 @@ public class Readertool {
 		String day_of_timeout = new String();
 		String sql = new String();
 		
+		borrow_book_id=id;
 		borrow_reader_id = reader.user_id;
-		Date now = new Date();
-		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
-		record_id = sdf.format(now);
-		record_id = String.valueOf(Integer.valueOf(record_id)*1000+Record_List.size());
-		borrow_date = f.format(now);
+		record_id=produce_recordid();
+		borrow_date = getDate();
 		back_or_not = "NO";
 		day_of_timeout = "0";
-		System.out.println("The size of record is "+Record_List.size());
-		System.out.println("The now record id: "+record_id);
 		sql="insert into borrow_record value(?,?,?,?,?,?,?)";
+		int count=1;
+		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)+count);
+		result=Integer.toString(Integer.parseInt(result)-count);
 		
-		Scanner in = new Scanner(System.in);
-		System.out.println("input id of the book which you want to borrow:");
-		borrow_book_id = in.nextLine();
-		
-		ResultSet rs=Select("select * from books where book_id=?",borrow_book_id);
 		try {
+			ResultSet rs=Select("select * from books where book_id=?",borrow_book_id);
 			if(!rs.first()) {
 				System.out.println("the book: "+borrow_book_id+" isnot exist.");
-				return;
+				return "NO";
 			}
-			int count=1;
-			reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)+count);
+			Update_result(result,borrow_book_id);
 			Update_borrow(reader.borrow_book_num,reader.user_id);
 			Update(sql,record_id,borrow_reader_id,borrow_book_id,borrow_date,return_date,back_or_not,day_of_timeout);
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
+		return "YES";
 	}
 	
-	public void back(Readers reader) {
-		Scanner in = new Scanner(System.in);
+	public String produce_recordid() {
+		String record_id = new String();
+		Date now = new Date();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+		record_id = sdf.format(now);
+		record_id = record_id+String.valueOf(Record_List.size()+10000);
+		return record_id;
+	}
+	
+	public String getDate() {
+		String borrow_date= new String();
+		Date now = new Date();
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		borrow_date = f.format(now);
+		return borrow_date;
+	}
+	
+	public void back(Readers reader,String id) {
+		
+		String result=new String();
+		try {
+			ResultSet r = Select("select result from books where book_id=?",id);
+			if(!r.first()) {
+				System.out.println("No this book "+id);
+				return;
+			}
+			result=r.getString("result");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		String record_id = new String();
 		String return_date = new String();
 		String borrow_date= new String();
 		String back_or_not = new String();
@@ -131,18 +273,23 @@ public class Readertool {
 		int timeout_num;
 		float price;
 		
-		Date now = new Date();
+		
+		return_date = getDate();
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return_date = f.format(now);
-		System.out.println("Input the book id ");
-		back_book_id=in.nextLine();
-		ResultSet rs=Select("select borrow_date from borrow_record where borrow_book_id=? and borrow_reader_id=?",back_book_id,reader.user_id);
+		Date now = new Date();
+		back_book_id=id;
+		back_or_not="YES";
+		int count= 1;
+		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)-count);
+		result=Integer.toString(Integer.parseInt(result)+count);
 		
 		try {
+			ResultSet rs=Select("select record_id,borrow_date from borrow_record where borrow_book_id=? and borrow_reader_id=? and back_or_not=?",back_book_id,reader.user_id,"NO");
 			if(!rs.first()) {
 				System.out.println("The book: "+back_book_id+" you did not borrow.");
 				return;
 			}
+			record_id=rs.getString("record_id");
 			borrow_date=rs.getString("borrow_date");
 		} catch (SQLException e) {
 			// TODO 自动生成的 catch 块
@@ -151,7 +298,7 @@ public class Readertool {
 		
 		try {
 			Date borrow_time = f.parse(borrow_date);
-			timeout_num=(int) ((now.getTime()-borrow_time.getTime())/(1000 * 60 * 60 * 24))-45;
+			timeout_num=(int) ((now.getTime()-borrow_time.getTime())/(1000 * 60 * 60 * 24))-1;
 			if(timeout_num<0) {
 				timeout_num=0;
 			}
@@ -165,12 +312,9 @@ public class Readertool {
 			e.printStackTrace();
 		}
 		
-		
-		back_or_not="YES";
-		int count= 1;
-		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)-count);
+		Update_result(result,id);
 		Update_back(reader.balance,reader.borrow_book_num,reader.user_id);
-		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where borrow_book_id=?",return_date,back_or_not,day_of_timeout,back_book_id);
+		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where borrow_book_id=? and record_id=?",return_date,back_or_not,day_of_timeout,back_book_id,record_id);
 	}
 	
 
@@ -262,10 +406,29 @@ public class Readertool {
 		}
 	}
 	
+	public void Update_result(String result,String book_id) {
+		DatabaseUtil Connect = new DatabaseUtil();
+		Connection connect=null;
+		connect = Connect.Connectsql(connect);
+		try {
+			PreparedStatement pstmt = connect.prepareStatement("update books set result=? where book_id=?");
+			pstmt.setInt(1, Integer.parseInt(result));
+			pstmt.setString(2, book_id);
+			pstmt.executeUpdate();
+			connect.close();
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	}
+	
 	private void Load_Record() {
 		ResultSet rs = Select("select * from borrow_record");
 		try {
-			
+			if(!rs.first()) {
+				System.out.println("no record");
+				return;
+			}
 			 do {
 				Borrow_Records record = new Borrow_Records(rs.getString("record_id"),rs.getString("borrow_reader_id"),rs.getString("borrow_book_id"),rs.getString("borrow_date"),
 						rs.getString("return_date"),rs.getString("back_or_not"),rs.getString("day_of_timeout"));
@@ -281,7 +444,7 @@ public class Readertool {
 	public void select_record(Readers reader) {
 		ResultSet rs = Select("select * from borrow_record where borrow_reader_id=?",reader.user_id);
 		try {
-			if(rs==null) {
+			if(!rs.first()) {
 				System.out.println("no record");
 				return;
 			}
@@ -326,5 +489,4 @@ public class Readertool {
 		}
 		return true;
 	}
-
 }

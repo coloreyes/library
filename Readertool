@@ -195,35 +195,32 @@ public class Readertool {
 			e.printStackTrace();
 		}
 		
-		String record_id = new String();
-		String borrow_reader_id= new String();
-		String borrow_book_id= new String();
-		String borrow_date= new String();
-		String return_date = new String();
-		String back_or_not = new String();
-		String day_of_timeout = new String();
+		Borrow_Records record = new Borrow_Records();
+		
+		record.setRecord_id(produce_recordid());
+		record.setBorrow_reader_id(reader.user_id);
+		record.setBorrow_book_id(id);
+		record.setBorrow_date(getDate());
+		record.setBack_or_not("NO");
+		record.setDay_Of_Timeout("0");
+		
 		String sql = new String();
 		
-		borrow_book_id=id;
-		borrow_reader_id = reader.user_id;
-		record_id=produce_recordid();
-		borrow_date = getDate();
-		back_or_not = "NO";
-		day_of_timeout = "0";
 		sql="insert into borrow_record value(?,?,?,?,?,?,?)";
 		int count=1;
 		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)+count);
 		result=Integer.toString(Integer.parseInt(result)-count);
 		
 		try {
-			ResultSet rs=Select("select * from books where book_id=?",borrow_book_id);
+			ResultSet rs=Select("select * from books where book_id=?",record.getBorrow_book_id());
 			if(!rs.first()) {
-				System.out.println("the book: "+borrow_book_id+" isnot exist.");
+				System.out.println("the book: "+record.getBorrow_book_id()+" isnot exist.");
 				return "NO";
 			}
-			Update_result(result,borrow_book_id);
+			Update_result(result,record.getBorrow_book_id());
 			Update_borrow(reader.borrow_book_num,reader.user_id);
-			Update(sql,record_id,borrow_reader_id,borrow_book_id,borrow_date,return_date,back_or_not,day_of_timeout);
+			Update(sql,record.getRecord_id(),record.getRecord_id(),record.getBorrow_book_id(),record.getBorrow_date(),record.getReturn_date(),record.getBack_or_not(),record.getDay_Of_Timeout());
+			Record_List.add(record);
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
@@ -264,45 +261,43 @@ public class Readertool {
 			e.printStackTrace();
 		}
 		
-		String record_id = new String();
-		String return_date = new String();
-		String borrow_date= new String();
-		String back_or_not = new String();
-		String day_of_timeout = new String();
-		String back_book_id = new String();
-		int timeout_num;
-		float price;
-		
-		
-		return_date = getDate();
-		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date now = new Date();
-		back_book_id=id;
-		back_or_not="YES";
-		int count= 1;
-		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)-count);
-		result=Integer.toString(Integer.parseInt(result)+count);
+		Borrow_Records record = new Borrow_Records();
 		
 		try {
-			ResultSet rs=Select("select record_id,borrow_date from borrow_record where borrow_book_id=? and borrow_reader_id=? and back_or_not=?",back_book_id,reader.user_id,"NO");
+			ResultSet rs=Select("select record_id,borrow_date from borrow_record where borrow_book_id=? and borrow_reader_id=? and back_or_not=?",id,reader.user_id,"NO");
 			if(!rs.first()) {
-				System.out.println("The book: "+back_book_id+" you did not borrow.");
+				System.out.println("The book: "+id+" you did not borrow.");
 				return;
 			}
-			record_id=rs.getString("record_id");
-			borrow_date=rs.getString("borrow_date");
+			
+			record.setRecord_id(rs.getString("record_id"));
+			record.setBorrow_date(rs.getString("borrow_date"));
+			
 		} catch (SQLException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
 		
+		int timeout_num;
+		float price;
+		
+		record.setBorrow_reader_id(reader.user_id);
+		record.setReturn_date(getDate());
+		record.setBorrow_book_id(id);
+		record.setBack_or_not("YES");
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date now = new Date();
+		int count= 1;
+		reader.borrow_book_num=Integer.toString(Integer.parseInt(reader.borrow_book_num)-count);
+		result=Integer.toString(Integer.parseInt(result)+count);
+		
 		try {
-			Date borrow_time = f.parse(borrow_date);
+			Date borrow_time = f.parse(record.getBorrow_date());
 			timeout_num=(int) ((now.getTime()-borrow_time.getTime())/(1000 * 60 * 60 * 24))-1;
 			if(timeout_num<0) {
 				timeout_num=0;
 			}
-			day_of_timeout=String.valueOf(timeout_num);
+			record.setDay_Of_Timeout(String.valueOf(timeout_num));
 			price=(float) ((float) timeout_num*1.2);
 			reader.balance = String.valueOf(Float.parseFloat(reader.balance)-price);
 			System.out.println("you out deadline "+timeout_num+" days.");
@@ -314,9 +309,8 @@ public class Readertool {
 		
 		Update_result(result,id);
 		Update_back(reader.balance,reader.borrow_book_num,reader.user_id);
-		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where borrow_book_id=? and record_id=?",return_date,back_or_not,day_of_timeout,back_book_id,record_id);
+		Update("update borrow_record set return_date=?,back_or_not=?,day_of_timeout=? where borrow_book_id=? and record_id=?",record.getReturn_date(),record.getBack_or_not(),record.getDay_Of_Timeout(),record.getBorrow_book_id(),record.getRecord_id());
 	}
-	
 
 	public void personalinformation(Readers reader) {
 		reader.PrintReader();

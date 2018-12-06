@@ -219,7 +219,7 @@ public class Readertool {
 			}
 			Update_result(result,record.getBorrow_book_id());
 			Update_borrow(reader.borrow_book_num,reader.user_id);
-			Update(sql,record.getRecord_id(),record.getRecord_id(),record.getBorrow_book_id(),record.getBorrow_date(),record.getReturn_date(),record.getBack_or_not(),record.getDay_Of_Timeout());
+			Update(sql,record.getRecord_id(),record.getBorrow_reader_id(),record.getBorrow_book_id(),record.getBorrow_date(),record.getReturn_date(),record.getBack_or_not(),record.getDay_Of_Timeout());
 			Record_List.add(record);
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
